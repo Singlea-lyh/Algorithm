@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+
+#ifndef bool
+    #define bool int
+    #define false 0
+	#define true 1
+#endif 
+
+#define SWAP(x, y)  {int t = x; x = y; y = t;}
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+void swap(int *a, int *b){
+	int temp;
+	
+	temp = *a;
+	*a = *b;
+	*b = temp;
+	
+	return;
+}
+
+//快速排序版本一 
+void QuickSort1(int a[], int low, int high){
+	int i = 0, j = 0, k = 0, temp = 0;
+	srand((unsigned int)time(NULL));
+    
+	
+	if(low < high){
+		i = low;
+		j = high;
+		k = rand() % (high - low);
+		
+		//每次都随机选择一个数进行比较，使快排过程尽量随机化 
+	    temp = a[i];	
+	    a[i] = a[low + k] ;
+	    a[low + k ] = temp;
+	    temp = a[i];
+		
+		while(i < j){
+			
+		    while(i < j && a[j] > temp)  
+			    j--;
+		    if(i < j){
+		        a[i++] = a[j];
+		    } 
+		    
+		    while(i < j && a[i] < temp) 
+			    i++;
+		    if(i < j){
+		    	a[j--] = a[i];
+			}
+	   }
+	   
+	   a[i] = temp;
+	   QuickSort1(a, low, i - 1);
+	   QuickSort1(a, i + 1, high);
+   }
+   return; 
+}
+//快速排序版本二 
+void QuickSort2(int a[], int low, int high){
+	int i = 0, j = 0, temp = 0;
+	
+	if(low < high){
+	    i = low - 1;
+	    j = low;
+	    temp = a[high];
+	    for(j = low ; j < high ; j++){
+	    	if(a[j] < temp){
+	    		i++;
+	    		SWAP(a[i], a[j]);
+			}
+		}
+		i++;
+		SWAP(a[i], a[high]);
+		QuickSort2(a, low, i - 1);
+		QuickSort2(a, i + 1, high);		
+	}
+	return;	
+}
+
+//二分法查找 
+bool FindNumber(int a[], int low, int high, int find){
+	int midNumber = 0;
+	int k = 0;
+	bool bfind = false;
+	
+	if( low < high){
+	    k = (low + high) / 2;
+	    midNumber = a[k];
+	    
+	    if(midNumber < find)
+	    {
+	    	bfind = FindNumber(a, k + 1, high, find);
+		}
+		if(midNumber > find){
+			bfind = FindNumber(a, low, k -1, find);
+		}
+		else{
+			bfind = true; 
+		}
+    }
+	return bfind;
+}
+
+int main(int argc, char *argv[]) {
+	
+	int n = 20;
+	int a[20] = {0};
+	int i = 0;	
+	int find = 0;
+	bool bfind = false; 
+		
+	srand((unsigned int)time(NULL));
+	
+	find = rand() % 20;
+	for(i = 0; i < n; i++){
+		a[i] = rand() % 20;
+	}
+	QuickSort1(a, 0, n - 1);           //快速排序一  
+	//QuickSort2(a, 0, n - 1);          //快速排序二 	 
+	for(i = 0; i<n; i++){
+		printf("%-4d", a[i]);
+	}
+	
+	printf("\n");
+	
+	scanf("%d/n", &find);
+	bfind = FindNumber(a, 0, n - 1, find);
+	if(bfind){
+	    printf("Find !!! \n");
+  }
+	else{
+	    printf("Not Find!!! \n");
+	}
+	return 0;
+}
