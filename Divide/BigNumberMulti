@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+
+//大整数相乘
+/*
+   将两个大整数递归分解 :
+    X = A * 10 ^ (n / 2) + B
+	Y = C * 10 ^ (n / 2) + D
+	XY = (A * 10 ^(n / 2) + B) * (C * 10 ^ (n / 2) + D))
+	   = AC * 10 ^ n +(AD + BC) * 10^(n / 2) + BD
+	   = AC * 10 ^ n + ((A - B) * (D - C) + AC + BD) * 10 ^ (n / 2) + BD
+	
+
+*/
+#define SIGN(A) ((A > 0) ? 1 : -1) 
+long long divideConquer(long long X, long long Y, int n){
+    int sign = SIGN(X) * SIGN(Y);
+    long long x = abs(X);
+    long long y = abs(Y);
+    if(x == 0 || y == 0){
+        return 0;
+    }else if(n == 1){
+        return sign * x * y;
+    }else{
+        long long A = (int) x / pow(10, (int)(n / 2));
+        long long B = x - A * pow(10, n / 2);
+        long long C = (int) y / pow(10, (int)(n / 2));
+        long long D = y - C * pow(10, n / 2);
+        long long AC = divideConquer(A, C, n / 2);
+        long long BD = divideConquer(B, D, n / 2);
+        long long ABDC = divideConquer((A - B), (D - C), n / 2) + AC + BD;
+        return sign * (AC * pow(10 , n) + ABDC * pow(10, (int)(n / 2)) + BD); 
+    }
+}
+long long BigNumberMulti(long long Number1, long long Number2){
+	long long Result = 0;
+	long long x = abs(Number1);
+	long long y = abs(Number2);
+	long long temp = Number1;
+	int n = 0;
+	while(temp / 10 > 0 ){
+		n++;
+	    temp /= 10;
+	}
+	n++;
+	if(x == 0 || y ==0){
+		Result = 0;
+	}
+	else if(n = 1){
+		Result = x * y; 
+	}
+	else{
+		long long A = x / pow(10 , (int)(n / 2));
+		long long B = x - A * pow(10, n / 2);
+		long long C = y / pow(10, (int)(n / 2));
+		long long D = y - C * pow(10, (int)(n / 2));
+		long long AC = BigNumberMulti(A, C);
+		long long BD = BigNumberMulti(B, D);
+		long long ABCD = BigNumberMulti((A - B), (D - C));
+		Result = AC * pow(10, n) + (ABCD + AC + BD) * pow(10 , n / 2) + BD; 
+	}
+	
+	return Result;	
+} 
+
+int main(int argc, char *argv[]) {
+	//分治法——大整数乘法
+    long long  Number1 = 0, Number2 = 0;
+    long long  Result;
+    
+    printf("Please input multiplicand: ");
+    scanf("%lld", &Number1);
+    printf("Please input multipiler: ");
+    scanf("%lld", &Number2);
+    Result = BigNumberMulti(Number1, Number2);
+//    Result = divideConquer(Number1, Number2, 6);
+    printf("Result = %lld\n", Result);
+
+	return 0;
+}
