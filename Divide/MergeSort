@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+
+//归并排序 
+void Merge(int a[], int low, int mid, int high){
+	int Number = high - low + 1;
+//	int b[Number];
+	int *b = NULL;
+	int i = low, j = mid + 1;
+	int k = 0;
+	b = (int *) calloc(Number , sizeof(int));
+//	printf("%p\n", b[0]);
+//	printf("%p\n", b[1]);
+	while(i <= mid && j <= high){
+		if(a[i] < a[j]){
+//			b[k++] = a[i++];
+            *(b + k++) = a[i++];
+		}
+		else if(a[i] > a[j]){
+			b[k++] = a[j++];
+		}
+		else{
+			b[k++] = a[i++];
+			b[k++] = a[j++];			
+		}
+	}
+	while(i <= mid){
+		b[k++] = a[i++];
+	}
+	while(j <= high){
+		b[k++] = a[j++];
+	}
+	for(i = low, k= 0; i <= high; i++, k++){
+		a[i] = b[k];
+	}
+	free(b);
+	return;
+}
+
+void MergeSort(int a[], int low, int high){
+	int midNumber = 0;
+	if(low < high){
+		midNumber = (low + high ) / 2;
+		MergeSort(a, low, midNumber);
+		MergeSort(a, midNumber + 1, high);
+		Merge(a, low, midNumber, high);
+	} 
+	return;
+}
+
+
+int main(int argc, char *argv[]) {	
+	int n = 20;
+	int a[20] = {0};
+	int i = 0;	
+  
+	find = rand() % 20;
+	for(i = 0; i < n; i++){
+		a[i] = rand() % 20;
+	}
+	MergeSort(a, 0 , n - 1);         //归并排序 	 
+	for(i = 0; i<n; i++){
+		printf("%-4d", a[i]);
+	}
+	
+	printf("\n");
+	return 0;
+}
