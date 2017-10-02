@@ -63,7 +63,7 @@ T（n）= k T(n/m)+f(n)
 
 具体时间复杂度的计算可以依据Master定理：
 
-
+![image](https://github.com/Singlea-lyh/Algorithm/blob/master/Images/Master.png)
 
 5 、适用分治算法的问题
 
