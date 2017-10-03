@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+//棋盘覆盖问题
+
+int Count = 0;
+int a[10][10];
+
+void ChessBoard(int RowNum, int ColumnNum, int ArrayRow, int ArrayColumn, int Size){
+	int i = 0, j = 0;
+	int NewSize = 0;
+	
+	if(1 == Size)  return;
+	
+	NewSize = Size / 2;
+	Count++;
+	
+	if(RowNum < (ArrayRow + NewSize)){
+		a[ArrayRow + NewSize][ArrayColumn + NewSize - 1] = Count;
+		a[ArrayRow + NewSize][ArrayColumn + NewSize] = Count;
+		if(ColumnNum < (ArrayColumn + NewSize)){
+			a[ArrayRow + NewSize - 1][ArrayColumn + NewSize] = Count;
+			ChessBoard(RowNum, ColumnNum, ArrayRow, ArrayColumn, NewSize);
+			ChessBoard(ArrayRow + NewSize - 1, ArrayColumn + NewSize, ArrayRow, ArrayColumn + NewSize,  Size - NewSize);
+		}
+		else if(ColumnNum >= (ArrayColumn + NewSize)){
+			a[ArrayRow + NewSize - 1][ArrayColumn + NewSize - 1] = Count;
+			ChessBoard(ArrayRow + NewSize - 1, ArrayColumn + NewSize - 1, ArrayRow, ArrayColumn, NewSize);
+			ChessBoard(RowNum, ColumnNum, ArrayRow, ArrayColumn + NewSize, Size - NewSize);
+		}
+		ChessBoard(ArrayRow + NewSize, ArrayColumn + NewSize - 1, ArrayRow + NewSize, ArrayColumn, NewSize);
+		ChessBoard(ArrayRow + NewSize, ArrayColumn + NewSize, ArrayRow + NewSize, ArrayColumn + NewSize,  Size - NewSize);
+			
+	}
+	else{
+		a[ArrayRow + NewSize - 1][ArrayColumn + NewSize - 1] = Count;
+		a[ArrayRow + NewSize - 1][ArrayColumn + NewSize] = Count;
+		if(ColumnNum < (ArrayColumn + NewSize)){
+			a[ArrayRow + NewSize][ArrayColumn + NewSize] = Count;
+			ChessBoard(RowNum, ColumnNum, ArrayRow + NewSize, ArrayColumn, NewSize);
+			ChessBoard(ArrayRow + NewSize, ArrayColumn + NewSize, ArrayRow + NewSize, ArrayColumn + NewSize, Size - NewSize);
+		}
+		else if(ColumnNum >= (ArrayColumn + NewSize)){
+			a[ArrayRow + NewSize][ArrayColumn + NewSize - 1] = Count;
+			ChessBoard(ArrayRow + NewSize, ArrayColumn + NewSize - 1, ArrayRow + NewSize, ArrayColumn, NewSize);
+			ChessBoard(RowNum, ColumnNum, ArrayRow + NewSize, ArrayColumn + NewSize, Size - NewSize);
+		}
+		ChessBoard(ArrayRow + NewSize - 1, ArrayColumn + NewSize - 1, ArrayRow, ArrayColumn, NewSize);
+		ChessBoard(ArrayRow + NewSize - 1, ArrayColumn + NewSize, ArrayRow, ArrayColumn + NewSize,  Size - NewSize);	
+	}
+	return;	
+}
+
+int main(){
+	
+	int N = 0;
+	int n = 0, m = 0;
+	int i = 0, j = 0;
+	printf("Please input size of array: ");
+	scanf("%d", &N);
+	printf("Please input special local row(<%d): ", N);
+	scanf("%d", &n);
+	printf("Please input special local column(<%d): ", N);
+	scanf("%d", &m);
+	
+	for(i = 0; i < N; i++ ){
+		for(j = 0; j < N; j++){
+			a[i][j] = 0;
+		}
+	}
+	
+	ChessBoard(n, m, 0, 0, N);
+	
+	for(i = 0; i < N; i++ ){
+		for(j = 0; j < N; j++){
+			printf("%4d", a[i][j]);
+		}
+		printf("\n");
+	}
+	
+	return 0;
+}
