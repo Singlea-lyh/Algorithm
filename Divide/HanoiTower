@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int Count = 0;
+
+void Move(int diskNumber, char from, char to){
+	
+	printf("%d: Move %d from %c to %c\n", ++Count, diskNumber, from, to);
+	return;
+}
+//参数说明：第一个参数为盘子数目，第二个参数为移动盘子的起始柱子，第三个参数为将要移到的柱子，第四个参数为中中转柱子 
+void HanoiTower(int Number, char x, char y, char z){
+	
+    if(1 == Number){
+    	Move(1, x ,y);
+	}
+	else{
+		HanoiTower(Number - 1, x, z, y);
+		Move(Number, x, y);
+		HanoiTower(Number - 1, z, y, x);
+	}
+	return;
+}
+
+int main(){
+	int Number = 0;
+	char x = 'A', y = 'B', z = 'C';
+	
+	printf("Please input the number of disk: ");
+	scanf("%d", &Number);
+	printf("Move disk from %c to %c\n", x, y);
+	
+	HanoiTower(Number, x, y, z);
+	
+	return 0;
+}
